@@ -1,0 +1,27 @@
+{
+  "name": "hospital-nps-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "API do sistema de avaliação e satisfação hospitalar",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test",
+    "db:check": "node src/scripts/check-db.js",
+    "migrate": "node-pg-migrate -m migrations --migration-file-language sql",
+    "migrate:up": "npm run migrate -- up",
+    "migrate:down": "npm run migrate -- down",
+    "migrate:create": "npm run migrate -- create"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.1"
+  }
+}

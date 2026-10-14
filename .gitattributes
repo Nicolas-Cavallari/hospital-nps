@@ -1,0 +1,4 @@
+# Normaliza finais de linha (evita ruído entre Windows e Linux)
+* text=auto eol=lf
+*.png binary
+*.woff2 binary

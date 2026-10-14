@@ -1,0 +1,17 @@
+{
+  "name": "hospital-nps",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sistema web de avaliação e satisfação hospitalar (FHDOD)",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "test": "npm --prefix backend test",
+    "db:check": "npm --prefix backend run db:check"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

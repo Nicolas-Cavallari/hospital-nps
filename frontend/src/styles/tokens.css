@@ -1,0 +1,48 @@
+/* Tokens de design — baseados na paleta e na tipografia do Figma (FHDOD). */
+:root {
+  /* Cores institucionais */
+  --color-primary: #e82e39;
+  --color-primary-soft: #fdebed;
+  --color-text: #202629;
+  --color-bg: #f5f7f8;
+  --color-success: #16845b;
+  --color-warning: #b56809;
+  --color-critical: #c92331;
+  --color-info: #2563a8;
+
+  /* Neutros auxiliares (derivados do texto/fundo) */
+  --color-surface: #ffffff;
+  --color-text-muted: color-mix(in srgb, var(--color-text) 62%, white);
+  --color-border: color-mix(in srgb, var(--color-text) 14%, white);
+
+  /* Tons suaves das cores semânticas (derivados das cores base) */
+  --color-success-soft: color-mix(in srgb, var(--color-success) 12%, white);
+  --color-warning-soft: color-mix(in srgb, var(--color-warning) 14%, white);
+  --color-critical-soft: color-mix(in srgb, var(--color-critical) 12%, white);
+  --color-info-soft: color-mix(in srgb, var(--color-info) 12%, white);
+  --color-neutral-soft: color-mix(in srgb, var(--color-text) 8%, white);
+
+  /* Tipografia */
+  --font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display-size: 2.375rem; /* 38px */
+  --font-display-weight: 700;
+  --font-title-size: 1.5rem; /* 24px */
+  --font-title-weight: 600;
+  --font-body-size: 0.9375rem; /* 15px */
+  --font-body-weight: 400;
+  --font-body-line-height: 1.5;
+
+  /* Forma e espaçamento (aproximados a partir das telas do Figma) */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-primary) 35%, white);
+}
