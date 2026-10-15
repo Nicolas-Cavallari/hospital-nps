@@ -1,0 +1,30 @@
+.private {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--space-4);
+}
+
+.private__card {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-6) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+}
+
+.private__logo {
+  width: 112px;
+  height: auto;
+  margin-bottom: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .private__card {
+    padding: var(--space-6);
+  }
+}

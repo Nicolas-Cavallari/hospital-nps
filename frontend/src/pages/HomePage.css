@@ -57,3 +57,27 @@
     width: 168px;
   }
 }
+
+h1 + .home-subtitle {
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.home-section {
+  margin-top: var(--space-4);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.home-links {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-links a {
+  color: var(--color-critical);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}

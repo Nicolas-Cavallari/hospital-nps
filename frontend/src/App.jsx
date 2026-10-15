@@ -1,7 +1,10 @@
-import HomePage from './pages/HomePage.jsx';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes.jsx';
 
-// As rotas (pesquisa pública, login e área administrativa) serão adicionadas
-// nas próximas etapas, conforme o "Mapa de URLs" do README.
 export default function App() {
-  return <HomePage />;
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
 }

@@ -2,7 +2,7 @@
 
 Aplicação web para pesquisas de satisfação, cálculo de NPS, indicadores e acompanhamento de manifestações pela ouvidoria.
 
-> **Estado atual: Etapa 1 (estrutura inicial).** Existem apenas a estrutura do projeto, a conexão com o banco e uma página/endpoint de verificação. Login, pesquisa, dashboards e ouvidoria serão implementados nas próximas etapas.
+> **Estado atual: Etapa 2 (interface e responsividade).** Além da estrutura, da conexão com o banco e da verificação (Etapa 1), existem as **telas** da pesquisa pública, do login e da troca de senha, **somente como interface**: nada é enviado ao backend nem gravado no banco, e o login/troca de senha ainda não funcionam. Autenticação, regras da pesquisa, dashboards e ouvidoria vêm nas próximas etapas.
 
 ## Tecnologias
 
@@ -10,7 +10,7 @@ Aplicação web para pesquisas de satisfação, cálculo de NPS, indicadores e a
 |---|---|
 | Banco de dados | PostgreSQL (Supabase, usado só como PostgreSQL gerenciado) |
 | Backend | Node.js 20+ · Express 5 · `pg` · `dotenv` · `node-pg-migrate` |
-| Frontend | React 19 · Vite · CSS próprio (tokens do Figma) · fonte Inter hospedada localmente |
+| Frontend | React 19 · Vite · React Router · `lucide-react` (ícones) · CSS próprio (tokens do Figma) · fonte Inter hospedada localmente |
 
 ## Estrutura de pastas
 
@@ -34,11 +34,15 @@ hospital-nps/
 │   └── .env.example
 ├── frontend/
 │   ├── src/
-│   │   ├── pages/public/    # telas da pesquisa pública
-│   │   ├── pages/admin/     # telas da área privada
+│   │   ├── pages/public/    # pesquisa pública (SurveyPage, screens/, survey/)
+│   │   ├── pages/admin/     # login e troca de senha (área privada)
 │   │   ├── components/
+│   │   │   ├── ui/          # Button, TextField, Checkbox, Alert, StrengthMeter
+│   │   │   ├── survey/      # escala, NPS, chips, cartão de escolha, estrutura de tela
+│   │   │   ├── layout/      # PublicLayout (pesquisa) e PrivateLayout (login)
+│   │   │   └── brand/       # logo
 │   │   ├── services/        # chamadas à API
-│   │   ├── routes/          # rotas e proteção por perfil
+│   │   ├── routes/          # rotas (AppRoutes) e, depois, proteção por perfil
 │   │   ├── styles/          # tokens de design e estilos globais
 │   │   └── assets/          # logo e imagens
 │   └── .env.example
@@ -72,7 +76,7 @@ npm run install:all
 
 3. Mantenha `DB_SSL=true` (o Supabase exige SSL). Opcionalmente, baixe o certificado CA do Supabase e informe o caminho em `DB_SSL_CA_PATH` para que o servidor do banco seja verificado. Sem ele, a conexão é criptografada, mas o servidor não é verificado.
 
-4. O frontend não precisa de configuração. `frontend/.env.example` só é necessário se o backend rodar em outro endereço.
+4. O frontend não precisa de configuração. `frontend/.env.example` só é necessário se o backend rodar em outro endereço ou se você quiser definir, provisoriamente, o endereço do texto de privacidade (`VITE_PRIVACY_POLICY_URL`) aberto pelo link da tela de contato da pesquisa. Sem ele, o link mostra um aviso.
 
 **Segurança:** o arquivo `.env` está no `.gitignore` e nunca deve ser versionado nem compartilhado. Se a senha do banco vazar, redefina-a no painel do Supabase.
 
@@ -95,6 +99,30 @@ npm run dev:frontend
 3. **Frontend + comunicação:** abra `http://localhost:5173`. A página "Verificação do sistema" mostra o estado da interface, da API e do banco. O frontend acessa a API pelo próprio endereço (`/api/...`), que o Vite repassa ao backend.
 4. **Testes automatizados do backend:** `npm test`.
 
+## Telas e responsividade (Etapa 2)
+
+Com o frontend rodando (`npm run dev:frontend`), abra a página `http://localhost:5173` e use os atalhos da seção "Telas da Etapa 2", ou acesse direto:
+
+| Tela | Endereço |
+|---|---|
+| Pesquisa pública (fluxo completo) | `http://localhost:5173/pesquisa/exemplo` |
+| Login | `http://localhost:5173/login` |
+| Troca de senha | `http://localhost:5173/trocar-senha` |
+
+`exemplo` não é um setor real: enquanto não há API, a pesquisa usa conteúdo de demonstração (`frontend/src/pages/public/survey/demoSurvey.js`), com os textos das telas do Figma.
+
+**Testar em diferentes larguras:** no Chrome ou Edge, abra as ferramentas do desenvolvedor (F12) e ative a barra de dispositivos (Ctrl+Shift+M). Use "Dimensions: Responsive" e teste, por exemplo:
+
+| Aparelho | Tamanho |
+|---|---|
+| Celular | 390 × 844 |
+| Tablet de 10" em retrato | 800 × 1280 |
+| Tablet de 10" em paisagem | 1280 × 800 |
+
+Teste também a rotação, o botão Voltar do navegador e, para a pesquisa, os dois caminhos: nota 0–6 (comentário e contato) e nota 7–10 (vai direto à confirmação).
+
+**Navegação da pesquisa:** tocar em um número responde e avança; "Voltar" volta à tela anterior com a resposta marcada. Os campos de data e hora seguem o idioma do navegador.
+
 ## Migrações do banco
 
 As migrações ficam em `backend/migrations/` (SQL). Ainda não existe nenhuma tabela: elas serão criadas a partir da Etapa 2.
@@ -115,10 +143,10 @@ Estes caminhos foram definidos na Etapa 1 e **não devem ser renomeados sem auto
 
 | Caminho | Uso | Acesso |
 |---|---|---|
-| `/` | Verificação do sistema (temporária, será substituída) | Desenvolvimento |
-| `/pesquisa/:slug` | Pesquisa pública de cada setor (reservado) | Público, sem login |
-| `/login` | Login da área privada (reservado) | Público |
-| `/trocar-senha` | Troca obrigatória de senha no primeiro acesso (reservado) | Autenticado |
+| `/` | Verificação do sistema e atalhos das telas (temporária, será substituída) | Desenvolvimento |
+| `/pesquisa/:slug` | Pesquisa pública de cada setor (somente interface na Etapa 2) | Público, sem login |
+| `/login` | Login da área privada (somente interface na Etapa 2) | Público |
+| `/trocar-senha` | Troca obrigatória de senha no primeiro acesso (somente interface na Etapa 2) | Autenticado |
 | `/admin/*` | Área privada por perfil (reservado) | Autenticado + permissão |
 
 **API**

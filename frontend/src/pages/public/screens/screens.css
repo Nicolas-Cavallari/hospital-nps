@@ -1,0 +1,129 @@
+/* "Pular esta pergunta" */
+.screen__skip {
+  align-self: center;
+  margin-top: var(--space-5);
+}
+
+/* Turnos */
+.shifts {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.shifts__options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.shift {
+  min-height: 48px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.shift.is-selected {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary);
+  color: var(--color-critical);
+}
+
+/* Comentário */
+.comment {
+  position: relative;
+}
+
+.comment__input {
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  padding: var(--space-4) var(--space-4) 2.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  resize: none;
+}
+
+.comment__input::placeholder {
+  color: color-mix(in srgb, var(--color-text) 45%, white);
+}
+
+.comment__input:focus {
+  outline: none;
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-text) 14%, white);
+}
+
+.comment__counter {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  pointer-events: none;
+}
+
+/* Contato */
+.contact__choices {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.contact__details {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.contact__privacy {
+  align-self: center;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.contact__privacy:hover {
+  color: var(--color-text);
+}
+
+@media (min-width: 768px) {
+  .screen__skip {
+    margin-top: var(--space-6);
+  }
+
+  .shifts__options {
+    gap: var(--space-4);
+  }
+
+  .shift {
+    min-height: 64px;
+    font-size: 1.125rem;
+    border-radius: 16px;
+  }
+
+  .comment__input {
+    min-height: 260px;
+    font-size: 1.0625rem;
+  }
+
+  .contact__choices {
+    gap: var(--space-4);
+  }
+
+  .contact__privacy {
+    min-height: 52px;
+    font-size: 1rem;
+  }
+}

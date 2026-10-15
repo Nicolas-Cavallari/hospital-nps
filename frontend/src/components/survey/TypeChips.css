@@ -1,0 +1,48 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.chip__icon {
+  color: var(--color-text);
+}
+
+.chip--reclamacao .chip__icon {
+  color: var(--color-critical);
+}
+
+.chip--sugestao .chip__icon {
+  color: #d99a00;
+}
+
+.chip--outro .chip__icon {
+  color: var(--color-text-muted);
+}
+
+.chip.is-selected {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary);
+  color: var(--color-critical);
+}
+
+@media (min-width: 768px) {
+  .chip {
+    min-height: 52px;
+    padding: 0 var(--space-5);
+    font-size: 1rem;
+  }
+}

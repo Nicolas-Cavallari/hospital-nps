@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import logo from '../assets/logo-fhdod.png';
+import { Link } from 'react-router-dom';
+import Logo from '../components/brand/Logo.jsx';
+import Button from '../components/ui/Button.jsx';
 import { getApiHealth, getDatabaseHealth } from '../services/api.js';
 import './HomePage.css';
 
@@ -12,6 +14,13 @@ const BADGE = {
 };
 
 const INITIAL = { api: 'checking', database: 'checking' };
+
+// Atalhos temporários para revisar as telas da Etapa 2 ("exemplo" não é um setor real).
+const SCREEN_LINKS = [
+  { to: '/pesquisa/exemplo', label: 'Pesquisa pública (fluxo completo)' },
+  { to: '/login', label: 'Login' },
+  { to: '/trocar-senha', label: 'Troca de senha' },
+];
 
 export default function HomePage() {
   const [checks, setChecks] = useState(INITIAL);
@@ -57,7 +66,7 @@ export default function HomePage() {
   return (
     <main className="home">
       <section className="home-card" aria-labelledby="home-title">
-        <img className="home-logo" src={logo} alt="FHDOD — Fundação Hospitalar Dr. Oswaldo Diesel" />
+        <Logo className="home-logo" />
 
         <h1 id="home-title">Verificação do sistema</h1>
         <p className="home-subtitle">
@@ -73,9 +82,18 @@ export default function HomePage() {
           ))}
         </ul>
 
-        <button type="button" className="btn btn-secondary" onClick={runChecks}>
+        <Button variant="secondary" onClick={runChecks}>
           Verificar novamente
-        </button>
+        </Button>
+
+        <h2 className="home-section">Telas da Etapa 2 (somente para revisão)</h2>
+        <ul className="home-links">
+          {SCREEN_LINKS.map(({ to, label }) => (
+            <li key={to}>
+              <Link to={to}>{label}</Link>
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );

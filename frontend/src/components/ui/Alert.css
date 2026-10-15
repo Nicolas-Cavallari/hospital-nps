@@ -1,0 +1,32 @@
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.alert__icon {
+  flex: none;
+  margin-top: 1px;
+}
+
+.alert--critical {
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+}
+
+.alert--critical .alert__icon {
+  color: var(--color-critical);
+}
+
+.alert--info {
+  background: var(--color-info-soft);
+  color: var(--color-text);
+}
+
+.alert--info .alert__icon {
+  color: var(--color-info);
+}

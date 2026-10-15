@@ -10,10 +10,12 @@
   --color-critical: #c92331;
   --color-info: #2563a8;
 
-  /* Neutros auxiliares (derivados do texto/fundo) */
+  /* Neutros auxiliares (medidos nas telas do Figma) */
   --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-border: #dde3e6;
+  --color-border-strong: #c7d0d4;
   --color-text-muted: color-mix(in srgb, var(--color-text) 62%, white);
-  --color-border: color-mix(in srgb, var(--color-text) 14%, white);
 
   /* Tons suaves das cores semânticas (derivados das cores base) */
   --color-success-soft: color-mix(in srgb, var(--color-success) 12%, white);
@@ -44,5 +46,10 @@
   --space-5: 1.5rem;
   --space-6: 2rem;
 
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-primary) 35%, white);
+  /* Faixas da pergunta de NPS (medidas nas telas do Figma) */
+  --nps-detractor-soft: #f6d6d9;
+  --nps-neutral-soft: #ffe7b5;
+  --nps-promoter-soft: #d8f1e7;
+
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, white);
 }

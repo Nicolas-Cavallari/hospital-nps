@@ -1,0 +1,98 @@
+.auth__header {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.auth__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.auth__subtitle {
+  color: var(--color-text-muted);
+}
+
+.auth__form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Força da senha */
+.strength {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.strength__bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.strength__bar {
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-soft);
+}
+
+.strength__bar--critical {
+  background: var(--color-critical);
+}
+
+.strength__bar--warning {
+  background: var(--color-warning);
+}
+
+.strength__bar--success {
+  background: var(--color-success);
+}
+
+.strength__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.strength__label--critical {
+  color: var(--color-critical);
+}
+
+.strength__label--warning {
+  color: var(--color-warning);
+}
+
+.strength__label--success {
+  color: var(--color-success);
+}
+
+/* Critérios da senha */
+.rules {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.rule.is-met {
+  color: var(--color-text);
+}
+
+.rule__icon {
+  flex: none;
+  color: var(--color-border-strong);
+}
+
+.rule.is-met .rule__icon {
+  color: var(--color-success);
+}

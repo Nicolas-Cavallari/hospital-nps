@@ -1,0 +1,54 @@
+.public {
+  --public-pad: 12px;
+  --footer-pad: var(--space-3);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--public-pad);
+}
+
+.public__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  min-height: calc(100vh - 2 * var(--public-pad));
+  min-height: calc(100dvh - 2 * var(--public-pad));
+  padding: var(--space-5) var(--space-5) var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(32, 38, 41, 0.04), 0 8px 24px rgba(32, 38, 41, 0.06);
+}
+
+.public__header {
+  margin-bottom: var(--space-6);
+}
+
+.public__logo {
+  display: block;
+  width: 88px;
+  height: auto;
+}
+
+/* Tablet de 10" (retrato ~800px e paisagem ~1280px) */
+@media (min-width: 768px) {
+  .public {
+    --public-pad: 32px;
+    --footer-pad: var(--space-5);
+  }
+
+  .public__card {
+    max-width: 720px;
+    padding: 3rem 3rem var(--space-5);
+  }
+
+  .public__header {
+    margin-bottom: 3rem;
+  }
+
+  .public__logo {
+    width: 120px;
+  }
+}
