@@ -13,7 +13,8 @@
     "migrate": "node-pg-migrate -m migrations --migration-file-language sql",
     "migrate:up": "npm run migrate -- up",
     "migrate:down": "npm run migrate -- down",
-    "migrate:create": "npm run migrate -- create"
+    "migrate:create": "npm run migrate -- create",
+    "test:db": "node src/scripts/check-db.js && node --test test/schema.test.js"
   },
   "engines": {
     "node": ">=20"

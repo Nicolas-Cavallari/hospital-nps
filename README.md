@@ -2,7 +2,7 @@
 
 Aplicação web para pesquisas de satisfação, cálculo de NPS, indicadores e acompanhamento de manifestações pela ouvidoria.
 
-> **Estado atual: Etapa 2 (interface e responsividade).** Além da estrutura, da conexão com o banco e da verificação (Etapa 1), existem as **telas** da pesquisa pública, do login e da troca de senha, **somente como interface**: nada é enviado ao backend nem gravado no banco, e o login/troca de senha ainda não funcionam. Autenticação, regras da pesquisa, dashboards e ouvidoria vêm nas próximas etapas.
+> **Estado atual: Etapa 3 (banco de dados e persistência).** Além da estrutura e da verificação (Etapa 1) e das **telas** da pesquisa, do login e da troca de senha (Etapa 2, somente interface), existe agora o **modelo de dados** em migrações SQL, com testes. A interface ainda não grava nada: o login e a pesquisa serão ligados ao banco nas próximas etapas (autenticação, regras da pesquisa, dashboards e ouvidoria).
 
 ## Tecnologias
 
@@ -29,7 +29,7 @@ hospital-nps/
 │   │   ├── scripts/         # utilitários (ex.: db:check)
 │   │   ├── app.js           # montagem do Express
 │   │   └── server.js        # inicialização do servidor
-│   ├── migrations/          # migrações SQL versionadas
+│   ├── migrations/          # migrações SQL versionadas (modelo de dados)
 │   ├── test/                # testes automatizados
 │   └── .env.example
 ├── frontend/
@@ -46,6 +46,7 @@ hospital-nps/
 │   │   ├── styles/          # tokens de design e estilos globais
 │   │   └── assets/          # logo e imagens
 │   └── .env.example
+├── docs/                    # documentação (modelo de dados)
 ├── package.json             # atalhos de comandos (raiz)
 └── README.md
 ```
@@ -123,17 +124,42 @@ Teste também a rotação, o botão Voltar do navegador e, para a pesquisa, os d
 
 **Navegação da pesquisa:** tocar em um número responde e avança; "Voltar" volta à tela anterior com a resposta marcada. Os campos de data e hora seguem o idioma do navegador.
 
-## Migrações do banco
+## Banco de dados e migrações (Etapa 3)
 
-As migrações ficam em `backend/migrations/` (SQL). Ainda não existe nenhuma tabela: elas serão criadas a partir da Etapa 2.
+O modelo de dados está descrito em [`docs/modelo-de-dados.md`](docs/modelo-de-dados.md) (diagrama, tabelas e regras garantidas pelo banco). As migrações ficam em `backend/migrations/` e são aplicadas em ordem:
+
+| Migração | Conteúdo |
+|---|---|
+| `…_funcoes-base` | Funções auxiliares (atualização de `updated_at`, bloqueio de exclusão/alteração) |
+| `…_organizacao-usuarios-setores-turnos-equipes` | `sectors`, `shifts`, `teams`, `users` |
+| `…_pesquisa-perguntas-avaliacoes-respostas` | `questions`, `question_options`, `evaluations`, `answers` |
+| `…_ouvidoria-atendimentos` | `ombudsman_cases`, `ombudsman_contact_attempts`, `ombudsman_case_actions` |
+| `…_seguranca-rls` | RLS ativado em todas as tabelas e API pública do Supabase fechada |
+
+**Aplicar no banco** (usa a `DATABASE_URL` de `backend/.env`):
+
+```bash
+npm run db:migrate
+```
+
+As migrações só **criam** objetos novos; não alteram nem apagam dados existentes. Reexecutar o comando é seguro (as já aplicadas são ignoradas). Os trechos "Down Migration" apagam tabelas e servem **apenas para desenvolvimento**; nunca os execute com dados reais.
+
+A CLI de migrações lê `DATABASE_URL` diretamente e não usa `DB_SSL`. Se o Supabase recusar a conexão por causa do SSL, execute o comando com `?sslmode=no-verify` no fim da URL, apenas naquele comando.
+
+**Validar a persistência:**
+
+```bash
+npm run db:test
+```
+
+Roda 15 verificações no banco configurado (senha só como hash, respostas gravadas e corrigidas por substituição, perguntas desativadas sem perder histórico, avaliação finalizada imutável, atendimento encerrado que não reabre, RLS ativo etc.). Tudo acontece dentro de uma transação **desfeita ao final**: nenhum dado é gravado, então é seguro rodar também no Supabase.
+
+Outros comandos úteis:
 
 ```bash
 npm --prefix backend run migrate:create nome-da-migracao   # cria um arquivo .sql
-npm --prefix backend run migrate:up                        # aplica as pendentes
-npm --prefix backend run migrate:down                      # desfaz a última
+npm --prefix backend run migrate:down                      # desfaz a última (só desenvolvimento)
 ```
-
-A primeira execução cria a tabela de controle `pgmigrations`. A CLI de migrações lê `DATABASE_URL` diretamente e não usa `DB_SSL`. Se o Supabase recusar a conexão por causa do SSL, execute o comando com `?sslmode=no-verify` no fim da URL, apenas naquele comando.
 
 ## Mapa de URLs (contrato do projeto)
 
@@ -162,7 +188,7 @@ Estes caminhos foram definidos na Etapa 1 e **não devem ser renomeados sem auto
 
 - Preservar as URLs acima e a separação entre rotas públicas e privadas.
 - Toda rota privada exige autenticação e verificação de permissão **no backend**.
-- Não excluir dados históricos: desativar em vez de apagar.
+- Não excluir dados históricos: desativar em vez de apagar (o banco também impede).
 - Nenhum segredo no código; use sempre o `.env`.
 - Implementar por etapas, sem alterar partes não relacionadas à tarefa.
 

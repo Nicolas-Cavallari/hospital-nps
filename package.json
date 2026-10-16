@@ -9,7 +9,9 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "build:frontend": "npm --prefix frontend run build",
     "test": "npm --prefix backend test",
-    "db:check": "npm --prefix backend run db:check"
+    "db:check": "npm --prefix backend run db:check",
+    "db:migrate": "npm --prefix backend run migrate:up",
+    "db:test": "npm --prefix backend run test:db"
   },
   "engines": {
     "node": ">=20"
