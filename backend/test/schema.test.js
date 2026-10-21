@@ -334,7 +334,7 @@ describe('modelo de dados', { skip: skipReason }, () => {
     });
   });
 
-  it('avaliação finalizada é imutável e nenhuma avaliação pode ser excluída', async () => {
+  it('avaliação finalizada é imutável (exceto a equipe, ver teste seguinte) e nenhuma avaliação pode ser excluída', async () => {
     await sandbox(async () => {
       const f = await createFixtures();
       const ev = await newEvaluation(f);
@@ -351,6 +351,46 @@ describe('modelo de dados', { skip: skipReason }, () => {
       await refuses(`update evaluations set status = 'incomplete', completed_at = null where id = $1`, [ev.id], /finalizada/);
       await refuses(`update evaluations set visit_date = '2026-01-01' where id = $1`, [ev.id], /finalizada/);
       await refuses(`delete from evaluations where id = $1`, [ev.id], /Exclusão não permitida/);
+    });
+  });
+
+  it('equipe pode ser atribuída depois a avaliação finalizada, só se ainda não houver e sem mexer em mais nada', async () => {
+    await sandbox(async () => {
+      const f = await createFixtures();
+      const complete = async () => {
+        const ev = await newEvaluation(f);
+        await upsertAnswer(ev.id, f.nps.id, 9);
+        await query(`update evaluations set status = 'completed', completed_at = now() where id = $1`, [ev.id]);
+        return ev;
+      };
+      const secondTeam = await one(
+        `insert into teams (sector_id, shift_id, name) values ($1, $2, 'Equipe B') returning id`,
+        [f.sector.id, f.shift.id],
+      );
+
+      const ev = await complete();
+      assert.equal((await loadEvaluation(ev.id)).team_id, null, 'sem regra definida, a equipe fica em branco');
+
+      await query(`update evaluations set team_id = $2 where id = $1`, [ev.id, f.team.id]);
+      assert.equal((await loadEvaluation(ev.id)).team_id, f.team.id);
+
+      // Já definida: não pode ser trocada nem removida.
+      await refuses(`update evaluations set team_id = $2 where id = $1`, [ev.id, secondTeam.id], /finalizada/);
+      await refuses(`update evaluations set team_id = null where id = $1`, [ev.id], /finalizada/);
+
+      // A exceção vale só para a equipe: qualquer outra mudança junto é recusada.
+      const other = await complete();
+      await refuses(
+        `update evaluations set team_id = $2, visit_date = '2026-01-01' where id = $1`,
+        [other.id, f.team.id],
+        /finalizada/,
+      );
+      // E a equipe continua precisando ser do mesmo setor.
+      const foreignTeam = await one(
+        `insert into teams (sector_id, shift_id, name) values ($1, $2, 'Equipe X') returning id`,
+        [f.other.id, f.shift.id],
+      );
+      await refuses(`update evaluations set team_id = $2 where id = $1`, [other.id, foreignTeam.id], /evaluations_team_in_sector/);
     });
   });
 

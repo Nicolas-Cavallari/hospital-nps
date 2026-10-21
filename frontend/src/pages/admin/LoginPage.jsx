@@ -1,5 +1,8 @@
 import { Lock, User } from 'lucide-react';
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { LoadingScreen } from '../../auth/RequireAuth.jsx';
+import { useAuth } from '../../auth/AuthContext.jsx';
 import PrivateLayout from '../../components/layout/PrivateLayout.jsx';
 import Alert from '../../components/ui/Alert.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -7,19 +10,37 @@ import Checkbox from '../../components/ui/Checkbox.jsx';
 import TextField from '../../components/ui/TextField.jsx';
 import './auth.css';
 
-/** ETAPA 2 — somente interface: o login real (e a mensagem de erro de credenciais) vêm na etapa de autenticação. */
+const CREDENTIALS_ERROR = 'Não foi possível entrar. Confira o usuário e a senha.';
+
 export default function LoginPage() {
+  const { status, user, signIn } = useAuth();
   const [form, setForm] = useState({ username: '', password: '', remember: false });
   const [errors, setErrors] = useState({});
-  const [showNotice, setShowNotice] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event) {
+  if (status === 'loading') return <LoadingScreen />;
+  if (status === 'authenticated') {
+    return <Navigate to={user.mustChangePassword ? '/trocar-senha' : '/admin'} replace />;
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
     const next = {};
     if (!form.username.trim()) next.username = 'Informe o usuário.';
     if (!form.password) next.password = 'Informe a senha.';
     setErrors(next);
-    setShowNotice(Object.keys(next).length === 0);
+    setSubmitError('');
+    if (Object.keys(next).length > 0) return;
+
+    setSubmitting(true);
+    const result = await signIn(form.username.trim(), form.password, form.remember);
+    setSubmitting(false);
+    // Em caso de sucesso, o estado muda e o redirecionamento acima acontece sozinho.
+    if (!result.ok) {
+      setForm((current) => ({ ...current, password: '' }));
+      setSubmitError(result.message ?? CREDENTIALS_ERROR);
+    }
   }
 
   return (
@@ -59,14 +80,10 @@ export default function LoginPage() {
           Manter meu usuário neste dispositivo
         </Checkbox>
 
-        {showNotice && (
-          <Alert variant="info">
-            O login ainda não está ativo. Ele será habilitado na etapa de autenticação.
-          </Alert>
-        )}
+        {submitError && <Alert variant="critical">{submitError}</Alert>}
 
-        <Button type="submit" size="lg" fullWidth>
-          Entrar
+        <Button type="submit" size="lg" fullWidth disabled={submitting}>
+          {submitting ? 'Entrando…' : 'Entrar'}
         </Button>
       </form>
     </PrivateLayout>

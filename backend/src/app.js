@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import routes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler.js';
@@ -7,6 +8,7 @@ export function createApp() {
 
   app.disable('x-powered-by');
   app.use(express.json({ limit: '100kb' }));
+  app.use(cookieParser());
 
   app.use('/api', routes);
 

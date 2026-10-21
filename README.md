@@ -135,6 +135,7 @@ O modelo de dados está descrito em [`docs/modelo-de-dados.md`](docs/modelo-de-d
 | `…_pesquisa-perguntas-avaliacoes-respostas` | `questions`, `question_options`, `evaluations`, `answers` |
 | `…_ouvidoria-atendimentos` | `ombudsman_cases`, `ombudsman_contact_attempts`, `ombudsman_case_actions` |
 | `…_seguranca-rls` | RLS ativado em todas as tabelas e API pública do Supabase fechada |
+| `…_equipe-atribuivel-depois` | Permite definir a equipe de avaliações já finalizadas quando a regra de atribuição existir (única exceção à trava) |
 
 **Aplicar no banco** (usa a `DATABASE_URL` de `backend/.env`):
 
@@ -152,7 +153,7 @@ A CLI de migrações lê `DATABASE_URL` diretamente e não usa `DB_SSL`. Se o Su
 npm run db:test
 ```
 
-Roda 15 verificações no banco configurado (senha só como hash, respostas gravadas e corrigidas por substituição, perguntas desativadas sem perder histórico, avaliação finalizada imutável, atendimento encerrado que não reabre, RLS ativo etc.). Tudo acontece dentro de uma transação **desfeita ao final**: nenhum dado é gravado, então é seguro rodar também no Supabase.
+Roda 16 verificações no banco configurado (senha só como hash, respostas gravadas e corrigidas por substituição, perguntas desativadas sem perder histórico, avaliação finalizada imutável, atendimento encerrado que não reabre, RLS ativo etc.). Tudo acontece dentro de uma transação **desfeita ao final**: nenhum dado é gravado, então é seguro rodar também no Supabase.
 
 Outros comandos úteis:
 

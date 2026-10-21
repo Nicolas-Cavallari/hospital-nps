@@ -1,5 +1,7 @@
 import { Circle, CircleCheck, Lock } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../auth/AuthContext.jsx';
 import PrivateLayout from '../../components/layout/PrivateLayout.jsx';
 import Alert from '../../components/ui/Alert.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -14,21 +16,37 @@ const RULES = [
   { key: 'numberAndSpecial', label: 'Número e caractere especial' },
 ];
 
-/** ETAPA 2 — somente interface: a troca de senha real vem na etapa de autenticação. */
+/**
+ * Troca obrigatória da senha temporária. As regras exibidas aqui são só orientação visual:
+ * o backend aplica a política de senha e recusa o que não cumprir.
+ */
 export default function ChangePasswordPage() {
+  const { updatePassword } = useAuth();
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [confirmTouched, setConfirmTouched] = useState(false);
-  const [showNotice, setShowNotice] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const result = evaluatePassword(password);
   const mismatch = confirm !== '' && confirm !== password;
   const showMismatch = mismatch && (confirmTouched || confirm.length >= password.length);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     setConfirmTouched(true);
-    setShowNotice(result.valid && confirm === password);
+    setSubmitError('');
+    if (!result.valid || confirm !== password) return;
+
+    setSubmitting(true);
+    const outcome = await updatePassword(password);
+    setSubmitting(false);
+    if (outcome.ok) {
+      navigate('/admin', { replace: true });
+    } else {
+      setSubmitError(outcome.message);
+    }
   }
 
   return (
@@ -77,14 +95,10 @@ export default function ChangePasswordPage() {
           })}
         </ul>
 
-        {showNotice && (
-          <Alert variant="info">
-            A troca de senha ainda não está ativa. Ela será habilitada na etapa de autenticação.
-          </Alert>
-        )}
+        {submitError && <Alert variant="critical">{submitError}</Alert>}
 
-        <Button type="submit" size="lg" fullWidth>
-          Salvar nova senha
+        <Button type="submit" size="lg" fullWidth disabled={submitting}>
+          {submitting ? 'Salvando…' : 'Salvar nova senha'}
         </Button>
       </form>
     </PrivateLayout>

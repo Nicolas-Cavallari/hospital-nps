@@ -15,11 +15,11 @@ const BADGE = {
 
 const INITIAL = { api: 'checking', database: 'checking' };
 
-// Atalhos temporários para revisar as telas da Etapa 2 ("exemplo" não é um setor real).
+// Atalhos temporários de desenvolvimento ("exemplo" não é um setor real).
 const SCREEN_LINKS = [
   { to: '/pesquisa/exemplo', label: 'Pesquisa pública (fluxo completo)' },
   { to: '/login', label: 'Login' },
-  { to: '/trocar-senha', label: 'Troca de senha' },
+  { to: '/admin', label: 'Área administrativa (exige login)' },
 ];
 
 export default function HomePage() {
@@ -86,7 +86,7 @@ export default function HomePage() {
           Verificar novamente
         </Button>
 
-        <h2 className="home-section">Telas da Etapa 2 (somente para revisão)</h2>
+        <h2 className="home-section">Atalhos de desenvolvimento</h2>
         <ul className="home-links">
           {SCREEN_LINKS.map(({ to, label }) => (
             <li key={to}>

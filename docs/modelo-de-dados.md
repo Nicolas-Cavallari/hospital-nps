@@ -32,7 +32,7 @@ erDiagram
 | `sectors` | Setores; o `slug` forma a URL pública `/pesquisa/:slug`; `is_active` fecha/reabre a pesquisa do setor |
 | `shifts` | Turnos cadastrados (nome + horário; fim menor que início = atravessa a meia-noite) |
 | `teams` | Equipes (A/B...) de um setor, ligadas a um turno |
-| `users` | Usuários internos: `super_admin`, `gestor` (com setor) e `ouvidoria`; só `password_hash`; `must_change_password` |
+| `users` | Usuários internos: `super_admin`, `gestor` (com setor) e `ouvidoria`; só `password_hash`; `must_change_password`; `token_version` (derruba sessões ao trocar a senha ou desativar) |
 | `questions` | Perguntas de setor e a pergunta de NPS (`is_nps`, sem setor); obrigatória/opcional, ativa/inativa, ordem |
 | `question_options` | Alternativas de cada pergunta (valor 0–10 + rótulo opcional): escala 1–5 ou NPS 0–10 |
 | `evaluations` | Uma avaliação por respondente anônimo: setor, data/hora/turno, equipe, estado, nota de NPS, hash do token |
@@ -56,7 +56,7 @@ exatamente um atendimento. O NPS não tem tabela própria: é uma pergunta (`is_
 | Valor respondido é uma alternativa da pergunta | FK composta `(question_id, value)` |
 | Obrigatória e NPS não podem ser puladas; pergunta do setor certo e ativa | Gatilho `answers_guard` |
 | Avaliação incompleta x completa; só completa com NPS | `status` + CHECKs em `evaluations` |
-| Avaliação finalizada é imutável; nada é excluído | Gatilhos de `evaluations` e `answers` |
+| Avaliação finalizada é imutável; nada é excluído | Gatilhos de `evaluations` e `answers`. Única exceção: definir a equipe quando ainda não havia (ver abaixo) |
 | Horário **ou** turno informado; equipe do mesmo setor | CHECK + FK composta `(team_id, sector_id)` |
 | `evaluations.nps_score` sempre igual à resposta de NPS | Gatilho `answers_sync_nps` |
 | Feedback só para nota 0–6; código próprio e único | Gatilho + sequência (`OUV-AAAA-NNNNNN`) |
@@ -69,11 +69,12 @@ exatamente um atendimento. O NPS não tem tabela própria: é uma pergunta (`is_
 ## O que continua nas regras do backend (próximas etapas)
 
 - Contar três tentativas sem resposta e encerrar como "contato sem sucesso" (o banco guarda tentativas e encerramento, mas não decide).
-- Escolher o turno a partir do horário e atribuir a equipe pelos horários cadastrados.
+- Escolher o turno a partir do horário.
+- Atribuir a equipe. A regra para distinguir equipes do mesmo setor e turno (provavelmente dia da semana ou escala de revezamento) **fica em aberto para o Super Admin definir**. Até lá, `evaluations.team_id` fica nulo quando houver mais de uma equipe possível, em vez de atribuir arbitrariamente. Quando a regra existir, ela poderá preencher a equipe também das avaliações já finalizadas (única alteração permitida em avaliação finalizada, e só se ainda não houver equipe).
 - Validar a obrigatoriedade das perguntas ao avançar e a autorização por perfil/setor.
 - Gerar o token da avaliação e gravar apenas o seu SHA-256.
 - Calcular NPS e indicadores; atualização dos dashboards a cada 8 horas.
 
 ## Fora desta etapa
 
-Tabela de configurações (link do texto legal), snapshots dos dashboards e a criação do primeiro Super Admin (virá com a autenticação, que gera o hash da senha).
+Tabela de configurações (link do texto legal), a configuração da regra de atribuição de equipe pelo Super Admin, snapshots dos dashboards e a criação do primeiro Super Admin (virá com a autenticação, que gera o hash da senha).

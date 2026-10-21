@@ -48,6 +48,22 @@ export function getPool() {
   return pool;
 }
 
+/** Executa `fn(client)` dentro de uma transação (commit se concluir, rollback se falhar). */
+export async function withTransaction(fn) {
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const result = await fn(client);
+    await client.query('commit');
+    return result;
+  } catch (err) {
+    await client.query('rollback');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 /** Encerra o pool (usado no desligamento da aplicação). */
 export async function closePool() {
   if (pool) {
