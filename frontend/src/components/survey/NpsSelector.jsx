@@ -1,7 +1,5 @@
 import './NpsSelector.css';
 
-const SCORES = Array.from({ length: 11 }, (_, i) => i);
-
 // Faixas do NPS: 0–6 detratores, 7–8 neutros, 9–10 promotores.
 function toneOf(score) {
   if (score <= 6) return 'detractor';
@@ -9,18 +7,19 @@ function toneOf(score) {
   return 'promoter';
 }
 
-export default function NpsSelector({ value, onSelect }) {
+export default function NpsSelector({ options, value, onSelect, disabled = false }) {
   return (
     <div className="nps" role="group" aria-labelledby="screen-title">
-      {SCORES.map((n) => (
+      {options.map(({ value: score }) => (
         <button
-          key={n}
+          key={score}
           type="button"
-          className={`nps__btn nps__btn--${toneOf(n)} ${value === n ? 'is-selected' : ''}`.trim()}
-          aria-pressed={value === n}
-          onClick={() => onSelect(n)}
+          className={`nps__btn nps__btn--${toneOf(score)} ${value === score ? 'is-selected' : ''}`.trim()}
+          aria-pressed={value === score}
+          disabled={disabled}
+          onClick={() => onSelect(score)}
         >
-          {n}
+          {score}
         </button>
       ))}
     </div>

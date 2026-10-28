@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as sectors from '../controllers/sectors.controller.js';
+import * as settings from '../controllers/settings.controller.js';
 import * as users from '../controllers/users.controller.js';
 import { authenticate, requirePasswordChanged } from '../middlewares/authenticate.js';
 import { requirePermission } from '../middlewares/authorize.js';
@@ -27,6 +28,12 @@ const sectorsRouter = Router();
 sectorsRouter.get('/', sectors.list);
 sectorsRouter.get('/:id', sectors.get);
 router.use('/sectors', requirePermission('sectors:read:all', 'sectors:read:own'), sectorsRouter);
+
+// Configurações gerais (link do texto legal): somente Super Admin.
+const settingsRouter = Router();
+settingsRouter.get('/', settings.get);
+settingsRouter.put('/privacy-policy-url', settings.setPrivacyPolicyUrl);
+router.use('/settings', requirePermission('settings:manage'), settingsRouter);
 
 // Ouvidoria: o acesso já está protegido (Super Admin e ouvidoria); os endpoints vêm em etapa futura.
 router.use('/ouvidoria', requirePermission('ouvidoria:read'), Router());

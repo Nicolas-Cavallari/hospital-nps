@@ -2,7 +2,7 @@
 
 Aplicação web para pesquisas de satisfação, cálculo de NPS, indicadores e acompanhamento de manifestações pela ouvidoria.
 
-> **Estado atual: Etapa 3 (banco de dados e persistência).** Além da estrutura e da verificação (Etapa 1) e das **telas** da pesquisa, do login e da troca de senha (Etapa 2, somente interface), existe agora o **modelo de dados** em migrações SQL, com testes. A interface ainda não grava nada: o login e a pesquisa serão ligados ao banco nas próximas etapas (autenticação, regras da pesquisa, dashboards e ouvidoria).
+> **Estado atual: Etapa 5 (pesquisa pública completa).** A pesquisa de cada setor funciona de ponta a ponta: lê a configuração do banco, grava cada resposta ao avançar, mantém avaliações interrompidas como incompletas, aplica o NPS único (0 a 10), o feedback opcional para notas de 0 a 6 com consentimento e o link legal configurado pelo Super Admin. Veja [`docs/pesquisa-publica.md`](docs/pesquisa-publica.md). O login e as permissões da área privada (Etapa 4) estão em [`docs/autenticacao-e-permissoes.md`](docs/autenticacao-e-permissoes.md). Dashboards, atendimento da ouvidoria e telas de cadastro (setores, perguntas, turnos) vêm nas próximas etapas.
 
 ## Tecnologias
 
@@ -23,7 +23,7 @@ hospital-nps/
 │   │   ├── controllers/     # tratamento de requisição/resposta
 │   │   ├── services/        # regras de negócio
 │   │   ├── repositories/    # acesso ao banco (SQL)
-│   │   ├── middlewares/     # tratamento de erros (e, depois, autenticação/autorização)
+│   │   ├── middlewares/     # autenticação, autorização por permissão, CSRF e tratamento de erros
 │   │   ├── validators/      # validação dos dados recebidos (próximas etapas)
 │   │   ├── jobs/            # tarefas agendadas, como os dashboards de 8h (próximas etapas)
 │   │   ├── scripts/         # utilitários (ex.: db:check)
@@ -35,18 +35,19 @@ hospital-nps/
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/public/    # pesquisa pública (SurveyPage, screens/, survey/)
-│   │   ├── pages/admin/     # login e troca de senha (área privada)
+│   │   ├── pages/admin/     # login, troca de senha e tela inicial da área privada
 │   │   ├── components/
 │   │   │   ├── ui/          # Button, TextField, Checkbox, Alert, StrengthMeter
 │   │   │   ├── survey/      # escala, NPS, chips, cartão de escolha, estrutura de tela
 │   │   │   ├── layout/      # PublicLayout (pesquisa) e PrivateLayout (login)
 │   │   │   └── brand/       # logo
 │   │   ├── services/        # chamadas à API
-│   │   ├── routes/          # rotas (AppRoutes) e, depois, proteção por perfil
+│   │   ├── auth/            # estado de login (AuthContext) e guarda de rotas (RequireAuth)
+│   │   ├── routes/          # rotas (AppRoutes)
 │   │   ├── styles/          # tokens de design e estilos globais
 │   │   └── assets/          # logo e imagens
 │   └── .env.example
-├── docs/                    # documentação (modelo de dados)
+├── docs/                    # documentação (modelo de dados, autenticação e permissões)
 ├── package.json             # atalhos de comandos (raiz)
 └── README.md
 ```
@@ -77,7 +78,15 @@ npm run install:all
 
 3. Mantenha `DB_SSL=true` (o Supabase exige SSL). Opcionalmente, baixe o certificado CA do Supabase e informe o caminho em `DB_SSL_CA_PATH` para que o servidor do banco seja verificado. Sem ele, a conexão é criptografada, mas o servidor não é verificado.
 
-4. O frontend não precisa de configuração. `frontend/.env.example` só é necessário se o backend rodar em outro endereço ou se você quiser definir, provisoriamente, o endereço do texto de privacidade (`VITE_PRIVACY_POLICY_URL`) aberto pelo link da tela de contato da pesquisa. Sem ele, o link mostra um aviso.
+4. Defina o `JWT_SECRET` (mínimo de 32 caracteres) em `backend/.env`; ele assina as sessões de login. Para gerar um valor aleatório:
+
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+   ```
+
+   Sem ele, o login responde 503. Trocar o valor desconecta todos os usuários.
+
+5. O frontend não precisa de configuração. `frontend/.env.example` só é necessário se o backend rodar em outro endereço.
 
 **Segurança:** o arquivo `.env` está no `.gitignore` e nunca deve ser versionado nem compartilhado. Se a senha do banco vazar, redefina-a no painel do Supabase.
 
@@ -99,6 +108,35 @@ npm run dev:frontend
 2. **Banco de dados:** rode `npm run db:check`. Deve imprimir `Banco de dados: OK`. Também é possível abrir `http://localhost:3001/api/health/db`, que responde `{"status":"ok","database":"ok"}`. Se `DATABASE_URL` não estiver preenchida, responde 503 com `"database":"not_configured"`; se não conseguir conectar, 503 com `"database":"unreachable"`.
 3. **Frontend + comunicação:** abra `http://localhost:5173`. A página "Verificação do sistema" mostra o estado da interface, da API e do banco. O frontend acessa a API pelo próprio endereço (`/api/...`), que o Vite repassa ao backend.
 4. **Testes automatizados do backend:** `npm test`.
+
+## Pesquisa pública (Etapa 5)
+
+Para experimentar a pesquisa é preciso ter setor, turnos, perguntas e a pergunta de NPS no banco. Como ainda não há telas de cadastro, use o exemplo [`docs/exemplo-configuracao-inicial.sql`](docs/exemplo-configuracao-inicial.sql) no SQL Editor do Supabase (ajuste os horários dos turnos) e abra `http://localhost:5173/pesquisa/recepcao`. O fluxo, a API pública e as regras estão em [`docs/pesquisa-publica.md`](docs/pesquisa-publica.md).
+
+```bash
+npm test             # sem banco: regras de turno/equipe, aviso de cliques, senha, permissões
+npm run survey:test  # fluxo completo da pesquisa no banco configurado (desfeito ao final)
+```
+
+## Login e usuários (Etapa 4)
+
+Depois de configurar o `JWT_SECRET` e aplicar as migrações (`npm run db:migrate`):
+
+```bash
+# cria o primeiro Super Admin; a senha temporária aparece uma única vez
+npm run user:create -- --username=admin --name="Seu Nome"
+```
+
+Entre em `http://localhost:5173/login`; o sistema pede a troca da senha temporária. Os demais usuários são criados pelo Super Admin (API `POST /api/admin/users`) ou pelo mesmo comando, com `--role=gestor --sector=<slug>` ou `--role=ouvidoria`. Setores ainda não têm tela de cadastro: crie pelo SQL Editor do Supabase, por exemplo `insert into sectors (name, slug) values ('Recepção', 'recepcao');`. Detalhes, permissões por perfil e rotas em [`docs/autenticacao-e-permissoes.md`](docs/autenticacao-e-permissoes.md).
+
+**Testes de acesso** (login e permissões, autorizados e não autorizados):
+
+```bash
+npm test             # sem banco: senha, permissões, CSRF e sessão
+npm run auth:test    # com banco de TESTE: defina TEST_DATABASE_URL antes
+```
+
+O `auth:test` cria e remove usuários e setores de teste (prefixo `zz_test_`). Use um banco de teste, de preferência separado do real (outro projeto gratuito no Supabase, por exemplo).
 
 ## Telas e responsividade (Etapa 2)
 
@@ -171,19 +209,20 @@ Estes caminhos foram definidos na Etapa 1 e **não devem ser renomeados sem auto
 | Caminho | Uso | Acesso |
 |---|---|---|
 | `/` | Verificação do sistema e atalhos das telas (temporária, será substituída) | Desenvolvimento |
-| `/pesquisa/:slug` | Pesquisa pública de cada setor (somente interface na Etapa 2) | Público, sem login |
-| `/login` | Login da área privada (somente interface na Etapa 2) | Público |
-| `/trocar-senha` | Troca obrigatória de senha no primeiro acesso (somente interface na Etapa 2) | Autenticado |
-| `/admin/*` | Área privada por perfil (reservado) | Autenticado + permissão |
+| `/pesquisa/:slug` | Pesquisa pública de cada setor | Público, sem login |
+| `/login` | Login da área privada | Público |
+| `/trocar-senha` | Troca obrigatória de senha no primeiro acesso | Autenticado |
+| `/admin` | Tela inicial da área privada (as telas de cada perfil virão depois) | Autenticado |
+| `/admin/*` | Demais telas da área privada (reservado) | Autenticado + permissão |
 
 **API**
 
 | Caminho | Uso | Acesso |
 |---|---|---|
 | `/api/health`, `/api/health/db` | Verificação de funcionamento | Aberto nesta etapa |
-| `/api/auth/*` | Login e sessão (reservado) | Conforme a rota |
-| `/api/public/*` | Operações da pesquisa pública (reservado) | Público, só o necessário para responder |
-| `/api/admin/*` | Operações da área privada (reservado) | Autenticação + autorização no backend |
+| `/api/auth/*` | Login, sessão e troca de senha | `login` e `logout` abertos; `me` e `change-password` com sessão |
+| `/api/public/*` | Operações da pesquisa pública (ver o contrato em `docs/pesquisa-publica.md`) | Público, só o necessário para responder; token próprio por avaliação |
+| `/api/admin/*` | Operações da área privada (usuários, setores, configurações; ouvidoria protegida) | Autenticação + autorização no backend |
 
 ## Regras de desenvolvimento
 

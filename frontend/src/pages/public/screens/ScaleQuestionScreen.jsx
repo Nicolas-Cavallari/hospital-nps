@@ -15,6 +15,7 @@ export default function ScaleQuestionScreen({
   onSkip,
   onContinue,
   onBack,
+  disabled = false,
 }) {
   const answered = value !== undefined;
 
@@ -23,27 +24,20 @@ export default function ScaleQuestionScreen({
       title={question.text}
       footer={
         <>
-          <Button variant="secondary" size="lg" icon={ChevronLeft} onClick={onBack}>
+          <Button variant="secondary" size="lg" icon={ChevronLeft} onClick={onBack} disabled={disabled}>
             Voltar
           </Button>
           {answered && (
-            <Button size="lg" onClick={onContinue}>
+            <Button size="lg" onClick={onContinue} disabled={disabled}>
               Continuar
             </Button>
           )}
         </>
       }
     >
-      <ScaleSelector
-        min={question.scale.min}
-        max={question.scale.max}
-        lowLabel={question.scale.lowLabel}
-        highLabel={question.scale.highLabel}
-        value={value}
-        onSelect={onSelect}
-      />
+      <ScaleSelector options={question.options} value={value} onSelect={onSelect} disabled={disabled} />
       {!question.required && (
-        <Button variant="quiet" className="screen__skip" onClick={onSkip}>
+        <Button variant="quiet" className="screen__skip" onClick={onSkip} disabled={disabled}>
           Pular esta pergunta
         </Button>
       )}

@@ -13,16 +13,16 @@ const TYPES = [
   { value: 'outro', label: 'Outro', icon: MessageCircle },
 ];
 
-export default function CommentScreen({ value, onChange, onContinue, onBack }) {
+export default function CommentScreen({ value, onChange, onContinue, onBack, disabled = false }) {
   return (
     <SurveyScreen
       title="Quer contar mais sobre sua experiência?"
       footer={
         <>
-          <Button variant="secondary" size="lg" icon={ChevronLeft} onClick={onBack}>
+          <Button variant="secondary" size="lg" icon={ChevronLeft} onClick={onBack} disabled={disabled}>
             Voltar
           </Button>
-          <Button size="lg" onClick={onContinue}>
+          <Button size="lg" onClick={onContinue} disabled={disabled}>
             Continuar
           </Button>
         </>

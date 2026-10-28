@@ -2,6 +2,7 @@ import { Router } from 'express';
 import adminRoutes from './admin.routes.js';
 import authRoutes from './auth.routes.js';
 import healthRoutes from './health.routes.js';
+import publicRoutes from './public.routes.js';
 
 const router = Router();
 
@@ -14,7 +15,7 @@ router.use('/auth', authRoutes);
 // Área privada: autenticação + autorização verificadas no backend em toda operação.
 router.use('/admin', adminRoutes);
 
-// Reservado para a próxima etapa (ver "Mapa de URLs" no README):
-//   /api/public/*  -> pesquisa pública (sem login); só as operações necessárias para responder.
+// Pesquisa pública (sem login): só as operações necessárias para responder.
+router.use('/public', publicRoutes);
 
 export default router;

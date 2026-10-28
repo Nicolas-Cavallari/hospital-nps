@@ -10,7 +10,7 @@
 - **Negado por padrão:** tudo sob `/api/admin` exige sessão válida e senha já trocada antes de qualquer rota. Uma rota nova adicionada ali nasce protegida.
 - **CSRF:** operações que alteram dados exigem o cabeçalho `X-CSRF-Protection: 1` (o frontend envia sozinho).
 - **Erros sem vazar contas:** usuário inexistente, senha errada e conta desativada recebem a mesma resposta (e tempo de resposta parecido). Setor fora do alcance do gestor responde "não encontrado", igual a um setor inexistente.
-- O **respondente público** não tem conta nem sessão: nenhuma rota pública dá acesso à área privada.
+- O **respondente público** não tem conta nem sessão: nenhuma rota pública dá acesso à área privada. Ele só alcança a própria avaliação, com um token próprio (ver `docs/pesquisa-publica.md`).
 
 ## Permissões por perfil
 
@@ -26,7 +26,7 @@ Fonte única: `backend/src/config/permissions.js` (as rotas verificam permissõe
 | Ouvidoria: consultar (`ouvidoria:read`) | ✅ | | ✅ |
 | Ouvidoria: registrar atendimento (`ouvidoria:handle`) | | | ✅ |
 
-Em vigor nesta etapa: usuários, setores (leitura) e a proteção da área da ouvidoria. As demais permissões já estão definidas e serão aplicadas quando cada funcionalidade for construída.
+Em vigor: usuários, setores (leitura), configurações (link legal) e a proteção da área da ouvidoria. As demais permissões já estão definidas e serão aplicadas quando cada funcionalidade for construída.
 
 ## Rotas
 
@@ -40,6 +40,7 @@ Sem sessão, tudo abaixo (exceto login, logout e health) responde **401**.
 | `POST /api/auth/change-password` | Logado (mesmo com troca pendente). Na troca obrigatória não pede a senha atual; nas demais, sim |
 | `GET/POST /api/admin/users`, `GET/PATCH /api/admin/users/:id`, `POST /api/admin/users/:id/reset-password` | Somente Super Admin |
 | `GET /api/admin/sectors`, `GET /api/admin/sectors/:id` | Super Admin e ouvidoria (todos); gestor (só o seu) |
+| `GET /api/admin/settings`, `PUT /api/admin/settings/privacy-policy-url` | Somente Super Admin (link do texto legal da pesquisa) |
 | `/api/admin/ouvidoria/*` | Super Admin e ouvidoria (sem endpoints ainda) |
 | `/api/admin/*` (qualquer outra) | Exige login; hoje responde 404 |
 

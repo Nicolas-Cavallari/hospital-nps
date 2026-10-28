@@ -15,9 +15,9 @@ const BADGE = {
 
 const INITIAL = { api: 'checking', database: 'checking' };
 
-// Atalhos temporários de desenvolvimento ("exemplo" não é um setor real).
+// Atalhos temporários de desenvolvimento.
 const SCREEN_LINKS = [
-  { to: '/pesquisa/exemplo', label: 'Pesquisa pública (fluxo completo)' },
+  { to: '/pesquisa/recepcao', label: 'Pesquisa pública do setor "recepcao" (o setor precisa existir)' },
   { to: '/login', label: 'Login' },
   { to: '/admin', label: 'Área administrativa (exige login)' },
 ];

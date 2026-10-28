@@ -19,6 +19,15 @@ function buildSslOptions() {
   return { rejectUnauthorized: false };
 }
 
+/**
+ * Somente para testes: troca o pool por um "pool de teste" que roda tudo dentro de uma transação
+ * que é desfeita ao final. Recusado em produção.
+ */
+export function setPoolForTesting(fakePool) {
+  if (env.isProduction) throw new Error('setPoolForTesting não pode ser usado em produção.');
+  pool = fakePool;
+}
+
 /** Indica se há uma string de conexão configurada. */
 export function isDatabaseConfigured() {
   return env.databaseUrl !== null;

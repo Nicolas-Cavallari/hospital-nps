@@ -12,15 +12,16 @@ import './screens.css';
 /**
  * Solicitação de retorno. Ao pedir retorno, o celular e o consentimento são obrigatórios;
  * ao optar pelo anonimato, ambos ficam escondidos.
- * O endereço do texto legal virá da configuração do Super Admin (etapa futura). Por enquanto pode ser
- * informado em `VITE_PRIVACY_POLICY_URL` (frontend/.env); sem ele, o link mostra um aviso ao ser tocado.
+ * O endereço do texto legal é o configurado pelo Super Admin (`privacyUrl`). Enquanto o hospital não o
+ * disponibilizar, o link mostra um aviso ao ser tocado.
  */
 export default function ContactScreen({
   value,
   onChange,
   onContinue,
   onBack,
-  privacyUrl = import.meta.env.VITE_PRIVACY_POLICY_URL || null,
+  privacyUrl = null,
+  disabled = false,
 }) {
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [showPolicyNotice, setShowPolicyNotice] = useState(false);
@@ -38,10 +39,10 @@ export default function ContactScreen({
       title="Você gostaria que nossa equipe entrasse em contato?"
       footer={
         <>
-          <Button variant="secondary" size="lg" icon={ChevronLeft} onClick={onBack}>
+          <Button variant="secondary" size="lg" icon={ChevronLeft} onClick={onBack} disabled={disabled}>
             Voltar
           </Button>
-          <Button size="lg" disabled={!canContinue} onClick={onContinue}>
+          <Button size="lg" disabled={!canContinue || disabled} onClick={onContinue}>
             Continuar
           </Button>
         </>

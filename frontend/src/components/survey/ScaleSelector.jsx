@@ -1,27 +1,32 @@
 import './ScaleSelector.css';
 
-export default function ScaleSelector({ min = 1, max = 5, value, onSelect, lowLabel, highLabel }) {
-  const values = Array.from({ length: max - min + 1 }, (_, i) => min + i);
+/** Escala de alternativas (ex.: 1 a 5). Os rótulos das pontas são opcionais. */
+export default function ScaleSelector({ options, value, onSelect, disabled = false }) {
+  const lowLabel = options[0]?.label;
+  const highLabel = options[options.length - 1]?.label;
 
   return (
     <div className="scale" role="group" aria-labelledby="screen-title">
-      <div className="scale__options" style={{ '--scale-columns': values.length }}>
-        {values.map((n) => (
+      <div className="scale__options" style={{ '--scale-columns': options.length }}>
+        {options.map(({ value: optionValue }) => (
           <button
-            key={n}
+            key={optionValue}
             type="button"
-            className={`scale__btn ${value === n ? 'is-selected' : ''}`.trim()}
-            aria-pressed={value === n}
-            onClick={() => onSelect(n)}
+            className={`scale__btn ${value === optionValue ? 'is-selected' : ''}`.trim()}
+            aria-pressed={value === optionValue}
+            disabled={disabled}
+            onClick={() => onSelect(optionValue)}
           >
-            {n}
+            {optionValue}
           </button>
         ))}
       </div>
-      <div className="scale__labels">
-        <span>{lowLabel}</span>
-        <span>{highLabel}</span>
-      </div>
+      {(lowLabel || highLabel) && (
+        <div className="scale__labels">
+          <span>{lowLabel}</span>
+          <span>{highLabel}</span>
+        </div>
+      )}
     </div>
   );
 }

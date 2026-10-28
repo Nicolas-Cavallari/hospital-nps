@@ -40,6 +40,7 @@ erDiagram
 | `ombudsman_cases` | Atendimento criado a partir do feedback: código, tipo, texto, contato/consentimento, situação e encerramento |
 | `ombudsman_contact_attempts` | Tentativas de contato (numeradas pelo banco), resultado e interesse em continuar |
 | `ombudsman_case_actions` | Providências e andamento do atendimento |
+| `app_settings` | Configurações gerais (linha única): link do texto legal, definido pelo Super Admin |
 
 Os feedbacks e os atendimentos ficam na **mesma tabela** (`ombudsman_cases`), já que cada feedback gera
 exatamente um atendimento. O NPS não tem tabela própria: é uma pergunta (`is_nps`) respondida em `answers`.
@@ -77,4 +78,4 @@ exatamente um atendimento. O NPS não tem tabela própria: é uma pergunta (`is_
 
 ## Fora desta etapa
 
-Tabela de configurações (link do texto legal), a configuração da regra de atribuição de equipe pelo Super Admin, snapshots dos dashboards e a criação do primeiro Super Admin (virá com a autenticação, que gera o hash da senha).
+A configuração da regra de atribuição de equipe pelo Super Admin, snapshots dos dashboards e a criação do primeiro Super Admin (virá com a autenticação, que gera o hash da senha).

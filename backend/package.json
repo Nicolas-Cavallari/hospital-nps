@@ -16,7 +16,8 @@
     "migrate:create": "npm run migrate -- create",
     "test:db": "node src/scripts/check-db.js && node --test test/schema.test.js",
     "user:create": "node src/scripts/create-user.js",
-    "test:auth": "node src/scripts/require-test-db.js && node --test test/auth.test.js"
+    "test:auth": "node src/scripts/require-test-db.js && node --test test/auth.test.js",
+    "test:survey": "node src/scripts/check-db.js && node --test test/public-survey.test.js"
   },
   "engines": {
     "node": ">=20"

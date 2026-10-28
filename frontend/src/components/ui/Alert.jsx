@@ -1,7 +1,7 @@
-import { CircleAlert, Info } from 'lucide-react';
+import { CircleAlert, Info, TriangleAlert } from 'lucide-react';
 import './Alert.css';
 
-const ICONS = { critical: CircleAlert, info: Info };
+const ICONS = { critical: CircleAlert, info: Info, warning: TriangleAlert };
 
 export default function Alert({ variant = 'info', title, children }) {
   const Icon = ICONS[variant];

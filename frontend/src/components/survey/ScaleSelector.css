@@ -51,3 +51,8 @@
     margin-top: var(--space-4);
   }
 }
+
+.scale__btn:disabled,
+.nps__btn:disabled {
+  cursor: progress;
+}

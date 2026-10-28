@@ -24,6 +24,7 @@ const APP_TABLES = [
   'ombudsman_cases',
   'ombudsman_contact_attempts',
   'ombudsman_case_actions',
+  'app_settings',
 ];
 
 // Hash FALSO, só com o formato de um hash argon2; usado dentro da transação desfeita.

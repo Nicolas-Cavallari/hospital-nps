@@ -26,6 +26,10 @@
   margin-bottom: var(--space-6);
 }
 
+.public__notice {
+  margin-bottom: var(--space-4);
+}
+
 .public__logo {
   display: block;
   width: 88px;

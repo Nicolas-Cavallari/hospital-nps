@@ -5,8 +5,8 @@
  */
 const CHANGING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-export async function request(method, path, body) {
-  const headers = { Accept: 'application/json' };
+export async function request(method, path, body, extraHeaders = {}) {
+  const headers = { Accept: 'application/json', ...extraHeaders };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   // Cabeçalho anti-CSRF exigido pelo backend nas operações que alteram dados.
   if (CHANGING_METHODS.has(method)) headers['X-CSRF-Protection'] = '1';
