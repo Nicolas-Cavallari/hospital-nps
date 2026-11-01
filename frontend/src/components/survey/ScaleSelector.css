@@ -56,3 +56,41 @@
 .nps__btn:disabled {
   cursor: progress;
 }
+<<<<<<< HEAD
+=======
+
+/* Variante com emojis: o emoji é o conteúdo; a seleção usa realce em vez de preenchimento. */
+.scale__btn--emoji {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.scale__emoji {
+  width: 72%;
+  height: 72%;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.15s;
+}
+
+.scale__btn--emoji.is-selected {
+  background: var(--color-primary-soft);
+  border: 2px solid var(--color-primary);
+  color: var(--color-text);
+}
+
+.scale__btn--emoji.is-selected .scale__emoji {
+  transform: scale(1.12);
+}
+
+@media (hover: hover) {
+  .scale__btn--emoji:not(.is-selected):not(:disabled):hover {
+    background: var(--color-primary-soft);
+    border-color: var(--color-primary);
+  }
+}
+>>>>>>> fab7d68 (adicionando emojis na avaliação e corrigindo a ordem)
