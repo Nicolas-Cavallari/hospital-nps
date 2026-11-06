@@ -56,8 +56,6 @@
 .nps__btn:disabled {
   cursor: progress;
 }
-<<<<<<< HEAD
-=======
 
 /* Variante com emojis: o emoji é o conteúdo; a seleção usa realce em vez de preenchimento. */
 .scale__btn--emoji {
@@ -93,4 +91,3 @@
     border-color: var(--color-primary);
   }
 }
->>>>>>> fab7d68 (adicionando emojis na avaliação e corrigindo a ordem)

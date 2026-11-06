@@ -11,15 +11,11 @@ Cada setor tem a sua URL: `/pesquisa/<slug>` (ex.: `/pesquisa/recepcao`). Sem lo
    - **Nota 0 a 6:** aparece o **comentário opcional**. Sem texto, a pesquisa conclui normalmente. Com texto, vem a tela de **contato**: "Sim, quero receber retorno" (celular e consentimento obrigatórios; link do texto legal) ou "Não, prefiro me manter anônimo" (sem celular e sem consentimento). O consentimento só vale para o feedback.
 4. **Confirmação**. Depois de concluída, a avaliação fica travada.
 
-<<<<<<< HEAD
-=======
 **Apresentação das alternativas** (só visual; os valores gravados não mudam):
 
 - A **melhor** alternativa fica à **esquerda** e a pior à direita (escala: 5 → 1; NPS: 10 → 0). Os rótulos das pontas seguem essa ordem (ex.: "Excelente" à esquerda, "Muito ruim" à direita).
 - Na escala padrão de **1 a 5**, cada alternativa é um **emoji** (1 = chorando, 2 = triste, 3 = neutro, 4 = sorrindo, 5 = olhos de estrela), em `frontend/src/assets/emojis/`. Escalas diferentes (outro conjunto de números) continuam com números.
 - A pergunta final de **NPS** continua com **números**, de 10 a 0, com as mesmas cores por faixa.
-
->>>>>>> fab7d68 (adicionando emojis na avaliação e corrigindo a ordem)
 O botão **Voltar** (e o "voltar" do aparelho) leva à tela anterior com a resposta marcada; trocar a resposta **substitui** a anterior no banco (nunca duplica nem apaga).
 
 Fechar a página no meio deixa a avaliação **incompleta**, com as respostas já salvas preservadas. Nada é apagado.
