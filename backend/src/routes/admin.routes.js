@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as sectors from '../controllers/sectors.controller.js';
 import * as settings from '../controllers/settings.controller.js';
 import * as users from '../controllers/users.controller.js';
+import * as dashboard from '../controllers/dashboard.controller.js';
 import { authenticate, requirePasswordChanged } from '../middlewares/authenticate.js';
 import { requirePermission } from '../middlewares/authorize.js';
 import { requireCsrfHeader } from '../middlewares/csrf.js';
@@ -13,6 +14,9 @@ const router = Router();
 router.use(requireCsrfHeader);
 router.use(authenticate);
 router.use(requirePasswordChanged);
+
+// Indicadores agregados; gestores recebem exclusivamente as linhas do próprio setor.
+router.get('/dashboard', requirePermission('results:read:all', 'results:read:own'), dashboard.get);
 
 // Usuários internos: somente Super Admin.
 const usersRouter = Router();

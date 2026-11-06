@@ -74,8 +74,8 @@ exatamente um atendimento. O NPS não tem tabela própria: é uma pergunta (`is_
 - Atribuir a equipe. A regra para distinguir equipes do mesmo setor e turno (provavelmente dia da semana ou escala de revezamento) **fica em aberto para o Super Admin definir**. Até lá, `evaluations.team_id` fica nulo quando houver mais de uma equipe possível, em vez de atribuir arbitrariamente. Quando a regra existir, ela poderá preencher a equipe também das avaliações já finalizadas (única alteração permitida em avaliação finalizada, e só se ainda não houver equipe).
 - Validar a obrigatoriedade das perguntas ao avançar e a autorização por perfil/setor.
 - Gerar o token da avaliação e gravar apenas o seu SHA-256.
-- Calcular NPS e indicadores; atualização dos dashboards a cada 8 horas.
+- NPS e dashboards são calculados a partir das respostas; snapshots agregados são atualizados a cada 8 horas.
 
 ## Fora desta etapa
 
-A configuração da regra de atribuição de equipe pelo Super Admin, snapshots dos dashboards e a criação do primeiro Super Admin (virá com a autenticação, que gera o hash da senha).
+A configuração da regra de atribuição de equipe pelo Super Admin e a criação do primeiro Super Admin (virá com a autenticação, que gera o hash da senha).

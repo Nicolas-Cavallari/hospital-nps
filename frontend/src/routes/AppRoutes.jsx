@@ -1,8 +1,8 @@
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '../auth/AuthContext.jsx';
 import RequireAuth from '../auth/RequireAuth.jsx';
-import AdminHomePage from '../pages/admin/AdminHomePage.jsx';
 import ChangePasswordPage from '../pages/admin/ChangePasswordPage.jsx';
+import DashboardPage from '../pages/admin/DashboardPage.jsx';
 import LoginPage from '../pages/admin/LoginPage.jsx';
 import HomePage from '../pages/HomePage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
@@ -38,7 +38,7 @@ export default function AppRoutes() {
           path="/admin"
           element={
             <RequireAuth>
-              <AdminHomePage />
+              <DashboardPage />
             </RequireAuth>
           }
         />

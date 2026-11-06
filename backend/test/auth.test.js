@@ -341,6 +341,20 @@ describe('autenticação e autorização (API)', { skip: skipReason }, () => {
       assert.equal((await call('GET', `/api/admin/sectors/${sectorB.id}`, { cookie: sessions.ouvidoria })).status, 200);
     });
 
+    it('dashboard: escopo do gestor vem da sessão e rejeita outro setor no parâmetro', async () => {
+      const own = await call('GET', `/api/admin/dashboard?sectorId=${sectorA.id}`, { cookie: sessions.gestorA });
+      assert.equal(own.status, 200);
+      assert.equal(own.body.scopeSectorId, sectorA.id);
+      assert.ok(own.body.rows.every((row) => row.sectorId === sectorA.id));
+
+      const other = await call('GET', `/api/admin/dashboard?sectorId=${sectorB.id}`, { cookie: sessions.gestorA });
+      assert.equal(other.status, 403);
+      assert.doesNotMatch(other.text, /Teste Setor B|zz-test-b/);
+      assert.equal((await call('GET', '/api/admin/dashboard', { cookie: sessions.gestorB })).status, 200);
+      assert.equal((await call('GET', '/api/admin/dashboard', { cookie: sessions.admin })).status, 200);
+      assert.equal((await call('GET', '/api/admin/dashboard', { cookie: sessions.ouvidoria })).status, 200);
+    });
+
     it('o alcance do gestor é lido do banco a cada requisição (mudar o setor vale na hora)', async () => {
       const move = await call('PATCH', `/api/admin/users/${u.gestorB.id}`, { cookie: sessions.admin, body: { sectorId: sectorA.id } });
       assert.equal(move.status, 200);
