@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import AdminLayout from '../../components/layout/AdminLayout.jsx';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { request } from '../../services/api.js';
 import './dashboard.css';
@@ -129,7 +130,7 @@ export default function DashboardPage() {
   const teams = useMemo(() => groupBy(rows, 'teamId').sort((a, b) => a.name.localeCompare(b.name)), [rows]);
   const updatedAt = data?.refreshedAt ? new Date(data.refreshedAt).toLocaleString('pt-BR') : '—';
 
-  return <main className="dashboard">
+  return <AdminLayout title="Indicadores"><div className="dashboard dashboard--in-admin">
     <header className="dashboard__heading"><div><p className="eyebrow">Experiência do paciente</p><h1>Visão geral do hospital</h1><p>Indicadores agregados • Atualizado em {updatedAt}</p></div></header>
     <section className="dashboard__filters" aria-label="Filtros do dashboard">
       <label>Período<select value={month} onChange={(e) => setMonth(e.target.value)}><option value="">Todos os períodos</option>{months.map((value) => <option key={value} value={value}>{new Date(`${value}-15T12:00:00`).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}</option>)}</select></label>
@@ -158,5 +159,5 @@ export default function DashboardPage() {
       </>}
     </>}
     <footer className="dashboard__foot">Os indicadores são snapshots atualizados a cada 8 horas. O NPS considera somente avaliações completas.</footer>
-  </main>;
+  </div></AdminLayout>;
 }

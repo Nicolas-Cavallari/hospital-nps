@@ -71,6 +71,8 @@ describe('modelo de dados', { skip: skipReason }, () => {
   }
 
   async function createFixtures() {
+    // Isola o NPS de teste do já configurado; o savepoint restaura os dados ao final.
+    await query('update questions set is_active = false where is_nps and is_active');
     const sector = await one(
       `insert into sectors (name, slug) values ('Setor Teste A', 'setor-teste-a') returning *`,
     );

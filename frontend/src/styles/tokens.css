@@ -13,6 +13,7 @@
   /* Neutros auxiliares (medidos nas telas do Figma) */
   --color-surface: #ffffff;
   --color-surface-muted: #f9fafb;
+  --color-table-heading: #f0f3f4;
   --color-border: #dde3e6;
   --color-border-strong: #c7d0d4;
   --color-text-muted: color-mix(in srgb, var(--color-text) 62%, white);

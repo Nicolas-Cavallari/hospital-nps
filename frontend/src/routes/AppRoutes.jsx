@@ -3,6 +3,7 @@ import { AuthProvider } from '../auth/AuthContext.jsx';
 import RequireAuth from '../auth/RequireAuth.jsx';
 import ChangePasswordPage from '../pages/admin/ChangePasswordPage.jsx';
 import DashboardPage from '../pages/admin/DashboardPage.jsx';
+import OmbudsmanPage from '../pages/admin/OmbudsmanPage.jsx';
 import LoginPage from '../pages/admin/LoginPage.jsx';
 import HomePage from '../pages/HomePage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
@@ -25,6 +26,8 @@ export default function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/pesquisa/:slug" element={<SurveyPage />} />
       <Route element={<PrivateArea />}>
+        <Route path="/admin/ouvidoria" element={<RequireAuth><OmbudsmanPage /></RequireAuth>} />
+        <Route path="/admin/ouvidoria/:id" element={<RequireAuth><OmbudsmanPage /></RequireAuth>} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/trocar-senha"

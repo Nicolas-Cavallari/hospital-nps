@@ -1,4 +1,5 @@
 .dashboard { width: min(1180px, 100%); margin: 0 auto; padding: var(--space-6); display: grid; gap: var(--space-5); }
+.dashboard.dashboard--in-admin { width: 100%; padding: 0; }
 .dashboard__heading { display: flex; justify-content: space-between; align-items: center; }
 .dashboard__heading > div { display: grid; gap: var(--space-2); }
 .dashboard__heading p:last-child, .dashboard__panel > p { color: var(--color-text-muted); }

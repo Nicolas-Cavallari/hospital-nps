@@ -1,0 +1,53 @@
+/* Padrão CSS da área privada: blocos, títulos, formulários, tabelas e estados. */
+.admin-page { display: grid; gap: 16px; width: 100%; min-width: 0; }
+.admin-page__heading { display: grid; gap: 5px; margin-bottom: 2px; }
+.admin-page__heading h1 { font-size: 26px; font-weight: 700; }
+.admin-page__heading p { font-size: .8125rem; color: var(--color-text-muted); }
+.admin-page__back { display: inline-flex; align-items: center; gap: 6px; width: fit-content; margin-bottom: 4px; color: var(--color-text-muted); text-decoration: none; font-size: .75rem; }
+.admin-page .admin-page__back:hover { color: var(--color-primary); }
+.admin-panel { min-width: 0; padding: 20px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.admin-panel h2 { margin: 0; font-size: 1.0625rem; font-weight: 600; }
+.admin-panel h3 { margin: 0; font-size: .875rem; font-weight: 600; }
+.admin-panel__heading { display: grid; gap: 4px; margin-bottom: 18px; }
+.admin-panel__heading > p, .admin-panel > p { color: var(--color-text-muted); font-size: .8125rem; }
+.admin-page .btn { min-height: 40px; padding: 10px 14px; font-size: .8125rem; }
+.admin-page .btn--quiet { padding-inline: 8px; }
+.admin-form { display: grid; align-content: start; gap: 16px; }
+.admin-form label { display: grid; gap: 6px; color: var(--color-text-muted); font-size: .75rem; font-weight: 600; }
+.admin-form textarea, .admin-form select { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); font: inherit; font-size: .8125rem; font-weight: 400; }
+.admin-form textarea { min-height: 110px; resize: vertical; line-height: 1.6; }
+.admin-form textarea:disabled, .admin-form select:disabled { background: var(--color-surface-muted); }
+.admin-form__actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.admin-table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: .75rem; }
+.admin-table thead { background: var(--color-table-heading); color: var(--color-text-muted); font-size: .625rem; text-transform: uppercase; }
+.admin-table th, .admin-table td { padding: 16px 13px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+.admin-table tbody th { font-weight: 600; }
+.admin-table tbody tr:last-child > * { border-bottom: 0; }
+.admin-table tbody tr:hover { background: var(--color-primary-soft); }
+.admin-page .admin-table a { color: var(--color-critical); text-decoration: none; }
+.admin-page .admin-table a:hover { text-decoration: underline; }
+.admin-table small { display: block; margin-top: 3px; color: var(--color-text-muted); font-size: .6875rem; }
+.admin-callout { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); background: var(--color-info-soft); color: var(--color-text); font-size: .8125rem; }
+.admin-callout > svg { flex-shrink: 0; color: var(--color-info); margin-top: 2px; }
+.admin-callout--success { background: var(--color-success-soft); }
+.admin-callout--success > svg { color: var(--color-success); }
+.admin-callout--warning { background: var(--color-warning-soft); }
+.admin-callout--warning > svg { color: var(--color-warning); }
+.admin-callout--error { background: var(--color-critical-soft); }
+.admin-callout--error > svg { color: var(--color-critical); }
+.admin-callout__content { flex: 1; min-width: 0; }
+.admin-empty { display: grid; justify-items: center; gap: 8px; padding: 44px 20px; text-align: center; color: var(--color-text-muted); font-size: .875rem; }
+.admin-empty > svg { color: var(--color-primary); }
+.admin-empty strong { color: var(--color-text); font-weight: 600; }
+.admin-page .badge { font-size: .6875rem; gap: 5px; padding: 3px 9px; }
+.admin-page .badge::before { width: 5px; height: 5px; }
+.admin-skeleton { padding: 20px; display: grid; gap: 16px; }
+.admin-skeleton span { display: block; height: 16px; width: 65%; background: var(--color-table-heading); border-radius: var(--radius-sm); }
+.admin-skeleton span:nth-child(2) { width: 85%; }
+.admin-skeleton span:nth-child(3) { width: 45%; }
+@media (max-width: 520px) {
+  .admin-panel { padding: 16px; }
+  .admin-page__heading h1 { font-size: 24px; }
+  .admin-page .btn { min-height: 44px; }
+}

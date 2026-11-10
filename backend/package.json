@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "test": "node --test",
+    "test": "node --test --test-concurrency=1",
     "db:check": "node src/scripts/check-db.js",
     "migrate": "node-pg-migrate -m migrations --migration-file-language sql",
     "migrate:up": "npm run migrate -- up",
@@ -17,7 +17,8 @@
     "test:db": "node src/scripts/check-db.js && node --test test/schema.test.js",
     "user:create": "node src/scripts/create-user.js",
     "test:auth": "node src/scripts/require-test-db.js && node --test test/auth.test.js",
-    "test:survey": "node src/scripts/check-db.js && node --test test/public-survey.test.js"
+    "test:survey": "node src/scripts/check-db.js && node --test test/public-survey.test.js",
+    "test:ouvidoria": "node src/scripts/check-db.js && node --test test/ombudsman.test.js"
   },
   "engines": {
     "node": ">=20"

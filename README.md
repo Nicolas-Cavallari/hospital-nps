@@ -214,6 +214,7 @@ Estes caminhos foram definidos na Etapa 1 e **não devem ser renomeados sem auto
 | `/trocar-senha` | Troca obrigatória de senha no primeiro acesso | Autenticado |
 | `/admin` | Tela inicial da área privada (as telas de cada perfil virão depois) | Autenticado |
 | `/admin/*` | Demais telas da área privada (reservado) | Autenticado + permissão |
+| `/admin/ouvidoria` e `/admin/ouvidoria/:id` | Atendimentos e histórico da ouvidoria | Super Admin consulta; ouvidoria consulta e registra |
 
 **API**
 
@@ -225,6 +226,15 @@ Estes caminhos foram definidos na Etapa 1 e **não devem ser renomeados sem auto
 | `/api/admin/*` | Operações da área privada (usuários, setores, configurações; ouvidoria protegida) | Autenticação + autorização no backend |
 
 ## Regras de desenvolvimento
+
+Organização dos arquivos do frontend:
+
+- `frontend/src/assets/`: imagens usadas pela aplicação, como logo e emojis.
+- `frontend/src/styles/`: tokens e estilos compartilhados; os estilos específicos ficam junto de seus componentes e páginas.
+- `frontend/dist/`: saída automática do build do Vite, ignorada pelo Git. Sua pasta `assets/` reúne imagens, fontes, CSS e JavaScript compilados, com nomes gerados. Não editar esses arquivos manualmente; alterar os fontes em `src/` e executar `npm run build:frontend`.
+- Arquivos temporários de prévia e referências de trabalho não integram o código da aplicação.
+
+O módulo da Etapa 7 está documentado em [docs/ouvidoria.md](docs/ouvidoria.md), incluindo fluxos, API, migração e testes (`npm run ouvidoria:test`).
 
 - Preservar as URLs acima e a separação entre rotas públicas e privadas.
 - Toda rota privada exige autenticação e verificação de permissão **no backend**.

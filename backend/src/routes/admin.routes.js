@@ -3,6 +3,7 @@ import * as sectors from '../controllers/sectors.controller.js';
 import * as settings from '../controllers/settings.controller.js';
 import * as users from '../controllers/users.controller.js';
 import * as dashboard from '../controllers/dashboard.controller.js';
+import * as ombudsman from '../controllers/ombudsman.controller.js';
 import { authenticate, requirePasswordChanged } from '../middlewares/authenticate.js';
 import { requirePermission } from '../middlewares/authorize.js';
 import { requireCsrfHeader } from '../middlewares/csrf.js';
@@ -39,7 +40,14 @@ settingsRouter.get('/', settings.get);
 settingsRouter.put('/privacy-policy-url', settings.setPrivacyPolicyUrl);
 router.use('/settings', requirePermission('settings:manage'), settingsRouter);
 
-// Ouvidoria: o acesso já está protegido (Super Admin e ouvidoria); os endpoints vêm em etapa futura.
-router.use('/ouvidoria', requirePermission('ouvidoria:read'), Router());
+// Consulta: Super Admin e ouvidoria. Registro do atendimento: somente ouvidoria.
+const ombudsmanRouter = Router();
+ombudsmanRouter.use((_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+ombudsmanRouter.get('/', ombudsman.list);
+ombudsmanRouter.get('/:id', ombudsman.get);
+ombudsmanRouter.post('/:id/attempts', requirePermission('ouvidoria:handle'), ombudsman.attempt);
+ombudsmanRouter.post('/:id/actions', requirePermission('ouvidoria:handle'), ombudsman.action);
+ombudsmanRouter.post('/:id/close', requirePermission('ouvidoria:handle'), ombudsman.close);
+router.use('/ouvidoria', requirePermission('ouvidoria:read'), ombudsmanRouter);
 
 export default router;
