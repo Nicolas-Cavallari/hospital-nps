@@ -14,6 +14,7 @@ import ThanksScreen from './screens/ThanksScreen.jsx';
 import VisitScreen from './screens/VisitScreen.jsx';
 import WelcomeScreen from './screens/WelcomeScreen.jsx';
 import { useRapidClickWarning } from './survey/useRapidClickWarning.js';
+import { continueNps } from './survey/continueNps.js';
 
 /**
  * Fluxo da pesquisa pública. Cada resposta é enviada ao servidor quando a pessoa avança; a
@@ -268,7 +269,7 @@ function SurveyFlow({ slug }) {
               else advance('nps', next);
             }),
           )}
-          onContinue={guard(() => advance('nps'))}
+          onContinue={guard(() => run(() => continueNps(answers.nps, { finish, advance })))}
         />
       );
     }
